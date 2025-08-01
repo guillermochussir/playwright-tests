@@ -6,7 +6,7 @@ test.describe('Login flow', () => {
   let root;
 
   test.beforeEach(async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'tag', description: 'login' });
+    testInfo.annotations.push({ type: 'area', description: 'login' });
 
     baseURL = process.env.BASE_URL;
     await page.goto(`${baseURL}/login`);
@@ -15,13 +15,13 @@ test.describe('Login flow', () => {
   });
 
   test('login form is visible @login @smoke', async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'tag', description: 'smoke' });
+    testInfo.annotations.push({ type: 'suite', description: 'smoke' });
 
     await expect(root.locator('#login')).toBeVisible();
   });
 
   test('user can log in with valid credentials @login @regression', async ({ page }, testInfo) => {
-    testInfo.annotations.push({ type: 'tag', description: 'regression' });
+    testInfo.annotations.push({ type: 'suite', description: 'regression' });
 
     const loginForm = root.locator('#login');
     await loginForm.locator('#username').fill('tomsmith');
