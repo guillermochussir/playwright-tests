@@ -1,39 +1,22 @@
 name: Playwright Tests
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
-  schedule:
-    - cron: '0 6 * * *'
+  push: { branches: [ master ] }
+  pull_request: { branches: [ master ] }
+  schedule: [ { cron: '0 6 * * *' } ]
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
 
 jobs:
-  smoke-tests:
-    if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+  smoke-setup:
+    uses: ./.github/workflows/playwright-setup.yml
+
+  smoke:
+    needs: smoke-setup
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'schedule' }}
     steps:
-      - &checkout
-        name: Checkout repository
-        uses: actions/checkout@v3
-
-      - &setup-node
-        name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
-      - &install-deps
-        name: Install dependencies
-        run: npm ci
-
-      - &install-browsers
-        name: Install Playwright browsers
-        run: npx playwright install --with-deps
-
       - name: Run Smoke Tests
         run: npx playwright test --grep "@smoke"
         env:
@@ -43,17 +26,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: smoke-report
-          path: playwright-report
+          path: ${{ needs.smoke-setup.outputs.report-path }}
 
-  regression-tests:
-    if: ${{ github.event_name == 'schedule' }}
+  regression-setup:
+    uses: ./.github/workflows/playwright-setup.yml
+
+  regression:
+    needs: regression-setup
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' }}
     steps:
-      - *checkout
-      - *setup-node
-      - *install-deps
-      - *install-browsers
-
       - name: Run Regression Tests
         run: npx playwright test --grep "@regression"
         env:
@@ -63,4 +45,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: regression-report
-          path: playwright-report
+          path: ${{ needs.regression-setup.outputs.report-path }}
