@@ -11,7 +11,7 @@ on:
 jobs:
   smoke-tests:
     if: ${{ github.event_name != 'schedule' }}
-    uses: ./.github/workflows/playwright-test.yml
+    uses: ./.github/workflows/playwright-setup.yml
     with:
       grep-filter: "@smoke"
     secrets:
@@ -19,7 +19,7 @@ jobs:
 
   regression-tests:
     if: ${{ github.event_name == 'schedule' }}
-    uses: ./.github/workflows/playwright-test.yml
+    uses: ./.github/workflows/playwright-setup.yml
     with:
       grep-filter: "@regression"
     secrets:
