@@ -5,7 +5,7 @@ test.describe('Login flow', () => {
   let baseURL;
   let root;
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }, testInfo) => {
     testInfo.annotations.push({ type: 'tag', description: 'login' });
 
     baseURL = process.env.BASE_URL;
