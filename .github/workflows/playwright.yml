@@ -18,7 +18,7 @@ jobs:
     if: ${{ github.event_name != 'schedule' }}
     steps:
       - name: Run Smoke Tests
-        run: npx playwright test --grep "@smoke"
+        run: npx playwright test --grep '@smoke'
         env:
           CI: true
 
@@ -37,7 +37,7 @@ jobs:
     if: ${{ github.event_name == 'schedule' }}
     steps:
       - name: Run Regression Tests
-        run: npx playwright test --grep "@regression"
+        run: npx playwright test --grep '@regression'
         env:
           CI: true
 
