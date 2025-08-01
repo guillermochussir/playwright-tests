@@ -1,48 +1,26 @@
 name: Playwright Tests
 
 on:
-  push: { branches: [ master ] }
-  pull_request: { branches: [ master ] }
-  schedule: [ { cron: '0 6 * * *' } ]
-
-env:
-  BASE_URL: ${{ secrets.BASE_URL }}
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 6 * * *'
 
 jobs:
-  smoke-setup:
-    uses: ./.github/workflows/playwright-setup.yml
-
-  smoke:
-    needs: smoke-setup
-    runs-on: ubuntu-latest
+  smoke-tests:
     if: ${{ github.event_name != 'schedule' }}
-    steps:
-      - name: Run Smoke Tests
-        run: npx playwright test --grep '@smoke'
-        env:
-          CI: true
+    uses: ./.github/workflows/playwright-test.yml
+    with:
+      grep-filter: "@smoke"
+    secrets:
+      BASE_URL: ${{ secrets.BASE_URL }}
 
-      - name: Upload Smoke Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: smoke-report
-          path: ${{ needs.smoke-setup.outputs.report-path }}
-
-  regression-setup:
-    uses: ./.github/workflows/playwright-setup.yml
-
-  regression:
-    needs: regression-setup
-    runs-on: ubuntu-latest
+  regression-tests:
     if: ${{ github.event_name == 'schedule' }}
-    steps:
-      - name: Run Regression Tests
-        run: npx playwright test --grep '@regression'
-        env:
-          CI: true
-
-      - name: Upload Regression Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: regression-report
-          path: ${{ needs.regression-setup.outputs.report-path }}
+    uses: ./.github/workflows/playwright-test.yml
+    with:
+      grep-filter: "@regression"
+    secrets:
+      BASE_URL: ${{ secrets.BASE_URL }}
