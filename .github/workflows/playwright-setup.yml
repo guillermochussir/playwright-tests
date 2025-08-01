@@ -2,8 +2,12 @@ on:
   workflow_call:
     inputs:
       grep-filter:
-        required: true
         type: string
+        required: true
+      workers:
+        type: number
+        required: false
+        default: 1
     secrets:
       BASE_URL:
         required: true
@@ -19,10 +23,14 @@ jobs:
           node-version: '18'
 
       - run: npm ci
+
       - run: npx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: npx playwright test --grep "${{ inputs.grep-filter }}"
+        run: |
+          npx playwright test \
+            --grep "${{ inputs.grep-filter }}" \
+            --workers=${{ inputs.workers }}
         env:
           CI: true
           BASE_URL: ${{ secrets.BASE_URL }}
