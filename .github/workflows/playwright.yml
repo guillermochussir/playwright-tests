@@ -2,39 +2,65 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ master ]        # runs on pushes to master
+    branches: [ master ]
   pull_request:
-    branches: [ master ]        # runs on PRs targeting master
+    branches: [ master ]
   schedule:
-    - cron: '0 6 * * *'         # nightly at 00:00 CST (06:00 UTC)
+    - cron: '0 6 * * *'
+
+env:
+  BASE_URL: ${{ secrets.BASE_URL }}
 
 jobs:
-  test:
+  smoke-tests:
+    if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
-    env:
-      BASE_URL: ${{ secrets.BASE_URL }}
     steps:
-      - name: Checkout repository
+      - &checkout
+        name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - &setup-node
+        name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies
+      - &install-deps
+        name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
+      - &install-browsers
+        name: Install Playwright browsers
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Run Smoke Tests
+        run: npx playwright test --grep "@smoke"
         env:
           CI: true
 
-      - name: Upload Test Artifacts
+      - name: Upload Smoke Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: smoke-report
+          path: playwright-report
+
+  regression-tests:
+    if: ${{ github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - *checkout
+      - *setup-node
+      - *install-deps
+      - *install-browsers
+
+      - name: Run Regression Tests
+        run: npx playwright test --grep "@regression"
+        env:
+          CI: true
+
+      - name: Upload Regression Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-report
           path: playwright-report
