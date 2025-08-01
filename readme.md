@@ -37,7 +37,31 @@ npx playwright test
 ### Running a Specific Test
 
 ```bash
-npx playwright test path/to/test.spec.ts
+npx playwright test path/to/test.spec.js
+```
+
+### Only run smoke tests
+
+```bash
+npx playwright test --grep '@smoke'
+```
+
+### Only run regression
+
+```bash
+npx playwright test --grep '@regression'
+```
+
+### Only run specific functional area
+
+```bash
+npx playwright test --grep '@login'
+```
+
+### Only run specific functional area + filter by sub-suite
+
+```bash
+npx playwright test --grep '(?=.*@login)(?=.*@smoke)'
 ```
 
 ### Generating a Test Report
