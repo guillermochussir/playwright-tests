@@ -27,21 +27,41 @@ jobs:
     secrets:
       BASE_URL: ${{ secrets.BASE_URL }}
 
-  publish-allure:
-    needs: [smoke-tests, regression-tests]
+  publish-after-push:
+    if: github.event_name == 'push'
+    needs: smoke-tests
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download Allure HTML Report
+      - name: Download Smoke Allure Report
+        uses: actions/download-artifact@v3
+        with:
+          name: allure-report-@smoke
+          path: docs/allure-report
+
+      - name: Deploy Smoke Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/allure-report
+
+  publish-after-schedule:
+    if: github.event_name == 'schedule'
+    needs: regression-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Regression Allure Report
         uses: actions/download-artifact@v3
         with:
           name: allure-report-@regression
           path: docs/allure-report
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy Regression Report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
