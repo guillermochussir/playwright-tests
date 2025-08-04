@@ -1,2 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","387","login form is visible @login @smoke","","Mon Aug 04 03:03:07 UTC 2025","passed","Mon Aug 04 03:03:08 UTC 2025","Login flow","login.spec.js","",""
+"","832","user can log in with valid credentials @login @regression","","Mon Aug 04 06:36:56 UTC 2025","passed","Mon Aug 04 06:36:56 UTC 2025","Login flow","login.spec.js","",""
