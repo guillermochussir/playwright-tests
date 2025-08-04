@@ -70,12 +70,27 @@ npx playwright test --grep '(?=.*@login)(?=.*@smoke)'
 npx playwright show-report
 ```
 
+## 🚀 GitHub Actions and Allure Test Reports 
+
+This repo automatically builds and publishes Allure dashboards for Playwright smoke and regression suites.
+
+| Trigger                 | Test Suite  | Report URL                                                              |
+|-------------------------|-------------|-------------------------------------------------------------------------|
+| On every push           | Smoke       | https://guillermochussir.github.io/playwright-tests/                    |
+| Nightly (cron schedule) | Regression  | https://guillermochussir.github.io/playwright-tests/                    |
+
+### How It Works
+
+1. **Smoke tests** run on every `push` and upload `allure-report-smoke`.  
+2. **Regression tests** run on a nightly schedule and upload `allure-report-regression`.  
+3. It downloads the chosen artifact and deploys it to the `gh-pages` branch.
+
 ## Folder Structure
 
 ```
 playwright-tests/
 ├── tests/           # Test specs
-├── playwright.config.ts
+├── playwright.config.js
 ├── package.json
 └── README.md
 ```
