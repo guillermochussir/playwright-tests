@@ -1,1 +1,1 @@
-[{"uid":"4a4c0dac9ff9963b","name":"user can log in with valid credentials @login @regression","time":{"start":1761287330539,"stop":1761287331009,"duration":470},"status":"passed","severity":"normal"}]
+[{"uid":"cf78d3a33a4fb59a","name":"user can log in with valid credentials @login @regression","time":{"start":1761373515275,"stop":1761373515774,"duration":499},"status":"passed","severity":"normal"}]
