@@ -1,2 +1,2 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","1442","user can log in with valid credentials @login @regression","","2026-07-31","passed","2026-07-31","Login flow","login.spec.js","",""
+"","1580","user can log in with valid credentials @login @regression","","2026-08-01","passed","2026-08-01","Login flow","login.spec.js","",""
